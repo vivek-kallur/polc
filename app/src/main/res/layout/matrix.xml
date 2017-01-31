@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/keypad"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"/>
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_above="@+id/calculate"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Result"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content" />
+
+    <Button android:id="@+id/calculate"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Calculate Path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
