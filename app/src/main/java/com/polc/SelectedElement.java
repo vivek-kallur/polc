@@ -1,8 +1,10 @@
 package com.polc;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
-public class SelectedElement {
+public class SelectedElement implements Parcelable {
     private int mCol;
     private int mRow;
     private int mSum;
@@ -90,6 +92,44 @@ public class SelectedElement {
 
     public void print() {
         Log.d(" ", getPrintData());
+    }
+
+    private SelectedElement(Parcel parcel) {
+        mRow = parcel.readInt();
+        mCol = parcel.readInt();
+        mSum = parcel.readInt();
+        mSequence = parcel.readString();
+        mValueSequence = parcel.readString();
+        mIsLimitCrossed = parcel.readInt() == 1 ? true : false;
+        mTotalCost = parcel.readInt();
+    }
+
+    public static final Creator<SelectedElement> CREATOR = new Creator<SelectedElement>() {
+        @Override
+        public SelectedElement createFromParcel(Parcel parcel) {
+            return new SelectedElement(parcel);
+        }
+
+        @Override
+        public SelectedElement[] newArray(int i) {
+            return new SelectedElement[0];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mRow);
+        parcel.writeInt(mCol);
+        parcel.writeInt(mSum);
+        parcel.writeString(mSequence);
+        parcel.writeString(mValueSequence);
+        parcel.writeInt(mIsLimitCrossed ? 1 : 0);
+        parcel.writeInt(mTotalCost);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }
 

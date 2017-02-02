@@ -29,12 +29,19 @@ public class MainActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
+    private static final int SUCCESS = 1;
+    private static final int FAILED = 2;
+    private static final String MESSAGE = "msg";
+    private static final String DATA = "data";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matrix);
 
-        // TODO orientation changes not considered
+        mHandler = new Handler(mLowestPathCallback);
+
+        // Hardcoding the orientation to be Portrait to keep it simple
         mTableLayout = (TableLayout) findViewById(R.id.keypad);
 
         mCalculateButton = (Button) findViewById(R.id.calculate);
@@ -63,18 +70,32 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener mCalculateClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            // TODO consider the delay if any that can cause Not responding error.
-            int[][] data = getIntegerArray();
-            if (data != null) {
-                FindMinimumCost findMinimumCost = new FindMinimumCost(data, 50);
-                SelectedElement selectedElement = findMinimumCost.getMinimumCost();
-                mResultTextView.setText(selectedElement.getPrintData());
-            } else {
-                mResultTextView.setText("Something went wrong!!");
-            }
+            mHandler.post(mLowestPathTask);
         }
     };
 
+    private Runnable mLowestPathTask = new Runnable() {
+        @Override
+        public void run() {
+            int[][] data = getIntegerArray();
+            Message message = new Message();
+            Bundle bundle = new Bundle();
+
+            if (data != null) {
+                FindMinimumCost findMinimumCost = new FindMinimumCost(data, 50);
+                SelectedElement selectedElement = findMinimumCost.getMinimumCost();
+                message.what = SUCCESS;
+                bundle.putString(MESSAGE, selectedElement.getPrintData());
+                bundle.putParcelable(DATA, selectedElement);
+                message.setData(bundle);
+            } else {
+                message.what = FAILED;
+                bundle.putString(MESSAGE, "Something went wrong!!");
+                message.setData(bundle);
+            }
+            mHandler.dispatchMessage(message);
+        }
+    };
 
     private int[][] getIntegerArray() {
         int[][] uiData = null;
@@ -97,8 +118,15 @@ public class MainActivity extends AppCompatActivity {
         }
         return uiData;
     }
+
+    private Handler.Callback mLowestPathCallback = new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            Bundle bundle = message.getData();
+            mResultTextView.setText(bundle.getString(MESSAGE));
+            return true;
+        }
+    };
 }
-
-
 
 

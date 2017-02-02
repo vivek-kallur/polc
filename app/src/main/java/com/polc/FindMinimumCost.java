@@ -29,6 +29,11 @@ public class FindMinimumCost {
         this.mMaxLimit = maxLimit;
     }
 
+    /**
+     * Start with position 0, 0
+     * For each row find the path with minimum cost
+     * @return
+     */
     public SelectedElement getMinimumCost() {
         if (mData == null) {
             return null;
@@ -49,6 +54,9 @@ public class FindMinimumCost {
             selectedElement.setSequence(String.format("%d", i));
             selectedElement.setValueSequence(String.format("%d", mData[i][0]));
 
+            // Find the min cost for each row,
+            // if the row is with the min cost or if it is the first row make that row or SelectedItem as
+            // the row with minimum cost.
             int sum = findMinimumCost(selectedElement);
             if (i == 0 || minSum > sum) {
                 minSum = sum;
@@ -77,6 +85,21 @@ public class FindMinimumCost {
         return finalElement;
     }
 
+    /**
+     * For the selectedElement / Row find the element with the low cost
+     * for given row r, col c, consider the elements
+     * 1. r-1 (or lenght-1 if it is 0th row), c+1
+     * 2. r, c+1
+     * 3. r+1 or 0 (if the current row is the last), c+1
+     *
+     * to find out the min element and consider that element to find the path with min cost.
+     *
+     * Since this is using recursion, the row with min cost is calculated starting with last column of the matrix
+     * all the way through the 0th column
+     *
+     * @param selectedElement
+     * @return
+     */
     private int findMinimumCost(SelectedElement selectedElement) {
         int topRow = (selectedElement.getRow() - 1 < 0) ? mMaxRow - 1 : selectedElement.getRow() - 1;
         int bottomRow = (selectedElement.getRow() + 1 < mMaxRow) ? selectedElement.getRow() + 1 : 0;
@@ -85,6 +108,7 @@ public class FindMinimumCost {
             return mData[selectedElement.getRow()][selectedElement.getCol()];
         } else {
 
+            // Find r-1th element cost and make it min
             SelectedElement finalResult = null;
             int minVal = 0;
             SelectedElement topRowElement = new SelectedElement();
@@ -97,6 +121,7 @@ public class FindMinimumCost {
             minVal = findMinimumCost(topRowElement);
 
             //get bottom element
+            // Find the cost of r+1th element and make that min if the cost is less than current min
             SelectedElement bottomElement = new SelectedElement();
             bottomElement.setCol(nextCol);
             bottomElement.setRow(bottomRow);
@@ -109,6 +134,7 @@ public class FindMinimumCost {
                 finalResult = bottomElement;
                 minVal = bottomSum;
             }
+            // Find the cost at the rth element and make that min if it is less than current min
             SelectedElement currentElement = new SelectedElement();
             currentElement.setCol(nextCol);
             currentElement.setRow(selectedElement.getRow());
@@ -121,6 +147,8 @@ public class FindMinimumCost {
                 finalResult = currentElement;
                 minVal = currentSum;
             }
+
+            // Update the sum and path
             selectedElement.setSum(selectedElement.getSum() + minVal);
             String seq = selectedElement.getSequence() + "," + finalResult.getSequence();
             selectedElement.setSequence(seq);

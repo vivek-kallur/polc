@@ -38,6 +38,12 @@ public class FindMinimumCostTest {
             {21, 23, 20, 19, 20},
             {20, 12, 20, 11, 10}};
 
+    private static final int[][] DATA_SINGLE_ROW = new int[][]{
+            {19, 10, 19, 10, 19}};
+
+    private static final int[][] DATA_INSUFFICIENT_COLS = new int[][]{
+            {19, 10, 19, 10}};
+
     private static final int MAX_LIMIT = 50;
 
     private static final int MIN_ROW = 1;
@@ -84,6 +90,22 @@ public class FindMinimumCostTest {
         assertEquals(selectedElement.isLimitCrossed(), true);
     }
 
+    @Test
+    public void testSingleRow() {
+        mFindMinCost.setData(DATA_SINGLE_ROW);
+        SelectedElement selectedElement = mFindMinCost.getMinimumCost();
+        print(selectedElement);
+        assertEquals(selectedElement.getSequence(), "0,0,0,0,0");
+        assertEquals(selectedElement.getTotalCost(), 77);
+    }
+
+    @Test
+    public void testInsufficientColumns() {
+        mFindMinCost.setData(DATA_INSUFFICIENT_COLS);
+        SelectedElement selectedElement = mFindMinCost.getMinimumCost();
+        assertEquals(selectedElement, null);
+    }
+
     @After
     public void clear() {
         mFindMinCost = null;
@@ -94,8 +116,10 @@ public class FindMinimumCostTest {
     }
 
     private void print(SelectedElement selectedElement) {
+        print("-----------------------------------------------------");
         print(selectedElement.isLimitCrossed() ? "No" : "Yes");
         print("Total Cost: " + selectedElement.getTotalCost());
         print("Row Sequence: " + selectedElement.getSequence());
+        print("-----------------------------------------------------");
     }
 }
