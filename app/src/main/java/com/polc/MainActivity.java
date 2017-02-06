@@ -14,8 +14,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import polc.com.polc.R;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";

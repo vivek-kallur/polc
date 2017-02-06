@@ -7,8 +7,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import polc.com.polc.BuildConfig;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +37,7 @@ public class FindMinimumCostTest {
             {20, 12, 20, 11, 10}};
 
     private static final int[][] DATA_SINGLE_ROW = new int[][]{
-            {19, 10, 19, 10, 19}};
+            {1, 10, 19, 1, 9}};
 
     private static final int[][] DATA_INSUFFICIENT_COLS = new int[][]{
             {19, 10, 19, 10}};
@@ -68,7 +66,7 @@ public class FindMinimumCostTest {
     public void testLowCost() {
         SelectedElement selectedElement = mFindMinCost.getMinimumCost();
         print(selectedElement);
-        assertEquals(selectedElement.getSequence(), "0,1,2,3,3,4");
+        assertEquals(selectedElement.getSequence(), "1 2 3 4 4 5");
         assertEquals(selectedElement.isLimitCrossed(), false);
     }
 
@@ -77,7 +75,7 @@ public class FindMinimumCostTest {
         mFindMinCost.setData(DATA_ADJECENT_ROWS);
         SelectedElement selectedElement = mFindMinCost.getMinimumCost();
         print(selectedElement);
-        assertEquals(selectedElement.getSequence(), "0,1,0,4,3,4");
+        assertEquals(selectedElement.getSequence(), "1 2 1 5 4 5");
         assertEquals(selectedElement.isLimitCrossed(), false);
     }
 
@@ -86,7 +84,7 @@ public class FindMinimumCostTest {
         mFindMinCost.setData(DATA_LIMIT_CROSSED);
         SelectedElement selectedElement = mFindMinCost.getMinimumCost();
         print(selectedElement);
-        assertEquals(selectedElement.getSequence(), "0,0,0,0,2");
+        assertEquals(selectedElement.getSequence(), "1 1 1");
         assertEquals(selectedElement.isLimitCrossed(), true);
     }
 
@@ -95,11 +93,11 @@ public class FindMinimumCostTest {
         mFindMinCost.setData(DATA_SINGLE_ROW);
         SelectedElement selectedElement = mFindMinCost.getMinimumCost();
         print(selectedElement);
-        assertEquals(selectedElement.getSequence(), "0,0,0,0,0");
-        assertEquals(selectedElement.getTotalCost(), 77);
+        assertEquals(selectedElement.getSequence(), "1 1 1 1 1");
+        assertEquals(selectedElement.getSum(), 40);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testInsufficientColumns() {
         mFindMinCost.setData(DATA_INSUFFICIENT_COLS);
         SelectedElement selectedElement = mFindMinCost.getMinimumCost();
@@ -118,7 +116,7 @@ public class FindMinimumCostTest {
     private void print(SelectedElement selectedElement) {
         print("-----------------------------------------------------");
         print(selectedElement.isLimitCrossed() ? "No" : "Yes");
-        print("Total Cost: " + selectedElement.getTotalCost());
+        print("Total Cost: " + selectedElement.getSum());
         print("Row Sequence: " + selectedElement.getSequence());
         print("-----------------------------------------------------");
     }

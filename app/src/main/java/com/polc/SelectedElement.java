@@ -45,7 +45,7 @@ public class SelectedElement implements Parcelable {
     }
 
     public String getSequence() {
-        return mSequence;
+        return mSequence.trim();
     }
 
     public void setSequence(String sequence) {
